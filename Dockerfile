@@ -1,10 +1,10 @@
-FROM golang:1.25
+FROM golang:1.25.5-alpine3.23
 
 WORKDIR /web-service-gin
 
 # go installで必要
-RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache git
+
 
 RUN go install github.com/air-verse/air@latest
 
