@@ -17,7 +17,7 @@ COPY . .
 # airを実行（ホットリロード有効）
 CMD ["air", "-c", ".air.toml"]
 
-RUN go build -o main /main.go
+RUN go build -o main ./main.go
 
 EXPOSE 8080
 
@@ -26,7 +26,7 @@ FROM alpine:3.23
 
 WORKDIR /app
 
-COPY --from=builder /main .
+COPY --from=builder /web-service-gin/main .
 
 COPY .env .
 COPY wait-for.sh .
@@ -35,4 +35,4 @@ RUN chmod +x wait-for.sh
 
 EXPOSE 8080
 
-CMD [ "/main" ]
+CMD [ "./main" ]

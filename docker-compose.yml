@@ -25,6 +25,8 @@ services:
       - SESSION_SECRET=${SESSION_SECRET}
     depends_on:
       - mysql
+    entrypoint: ["./wait-for.sh", "mysql:3306", "--"]
+    command: ["./main"]
     ports:
       - 8080:8080
     volumes:
