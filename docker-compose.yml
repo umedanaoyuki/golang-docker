@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.0
+    platform: linux/amd64
+    container_name: mysql-container
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.development
+    environment:
+      - ENV=${ENV}
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_HOST=redis_server:6379
+      - SESSION_SECRET=${SESSION_SECRET}
+    depends_on:
+      - mysql
+    entrypoint: ["./wait-for.sh", "mysql:3306", "--"]
+    command: ["./main"]
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/web-service-gin
+      - /web-service-gin/tmp
+volumes:
+  mysql:
